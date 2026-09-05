@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d16">
+  <meta name="description" content="Paqaobet30 demo slot — a responsive, virtual-credit slot game.">
+  <title>Paqaobet30 — Demo Slot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Paqaobet30 home">
+        <span class="brand-mark">P</span><span>Paqaobet<span>30</span></span>
+      </a>
+      <div class="top-actions">
+        <span class="demo-pill">DEMO MODE</span>
+        <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle sound">🔊</button>
+      </div>
+    </header>
+
+    <main class="game-wrap">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">DEMO SLOT</p>
+          <h1>Neon Fortune</h1>
+          <p class="sub">Spin with virtual credits. No deposits, withdrawals, or real-money play.</p>
+        </div>
+        <div class="balance-card">
+          <span>DEMO BALANCE</span>
+          <strong id="balance">1,000.00</strong>
+          <small>credits</small>
+        </div>
+      </section>
+
+      <section class="machine-card" aria-label="Slot game">
+        <div class="machine-glow"></div>
+        <div class="machine-top">
+          <div class="status"><span class="dot"></span><span id="statusText">READY TO SPIN</span></div>
+          <div class="round">ROUND <span id="round">0</span></div>
+        </div>
+
+        <div class="reels-frame">
+          <div class="payline"></div>
+          <div class="reels" id="reels" aria-live="polite"></div>
+          <div class="win-badge hidden" id="winBadge">WIN <span id="winAmount">0.00</span></div>
+        </div>
+
+        <div class="machine-controls">
+          <div class="control-group">
+            <label for="bet">BET</label>
+            <div class="stepper">
+              <button id="betDown" type="button" aria-label="Decrease bet">−</button>
+              <input id="bet" value="10.00" inputmode="decimal" aria-label="Bet amount">
+              <button id="betUp" type="button" aria-label="Increase bet">+</button>
+            </div>
+          </div>
+          <button class="spin-btn" id="spinBtn" type="button">
+            <span class="spin-icon">↻</span>
+            <span>SPIN</span>
+          </button>
+          <div class="control-group">
+            <label>LAST WIN</label>
+            <div class="last-win" id="lastWin">0.00</div>
+          </div>
+        </div>
+
+        <div class="machine-image-wrap">
+          <img src="/assets/slot-machine.webp" alt="" class="machine-image">
+        </div>
+      </section>
+
+      <section class="info-grid">
+        <article class="panel">
+          <div class="panel-head"><h2>Paytable</h2><span>3 symbols on the center line</span></div>
+          <div class="paytable" id="paytable"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head"><h2>Recent Spins</h2><button id="resetBtn" class="text-btn" type="button">Reset demo</button></div>
+          <div class="history" id="history"><div class="empty">Your demo spins will appear here.</div></div>
+        </article>
+      </section>
+
+      <section class="demo-note">
+        <strong>Demo only.</strong> This build uses virtual credits and has no payment, cash-out, account, or real-money functionality.
+      </section>
+    </main>
+
+    <footer>© <span id="year"></span> Paqaobet30 · Demo entertainment build</footer>
+  </div>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>

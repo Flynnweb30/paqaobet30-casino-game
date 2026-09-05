@@ -1,80 +1,31 @@
-const express = require("express");
-const path = require("path");
-const crypto = require("crypto");
+const express=require("express");
+const path=require("path");
+const crypto=require("crypto");
+const app=express();
+const PORT=process.env.PORT||10000;
+app.disable("x-powered-by");
+app.use(express.json({limit:"10kb"}));
+app.use(express.static(path.join(__dirname,"public"),{extensions:["html"]}));
 
-const app = express();
-const PORT = process.env.PORT || 10000;
-const sessions = new Map();
-
-app.use(express.json({ limit: "32kb" }));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
-
-const games = [
-  { id: 1, name: "Golden Fortune", category: "Slots", image: "/assets/game-1.webp" },
-  { id: 2, name: "Royal Spin", category: "Slots", image: "/assets/game-2.webp" },
-  { id: 3, name: "Dragon Arena", category: "Arcade", image: "/assets/game-3.webp" },
-  { id: 4, name: "Lucky Reels", category: "Slots", image: "/assets/game-4.webp" },
-  { id: 5, name: "Crystal Quest", category: "Arcade", image: "/assets/game-5.webp" },
-  { id: 6, name: "Mega Stars", category: "Slots", image: "/assets/game-6.webp" },
-  { id: 7, name: "Ocean King", category: "Arcade", image: "/assets/game-7.webp" },
-  { id: 8, name: "Diamond Rush", category: "Slots", image: "/assets/game-8.webp" }
-];
-
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, service: "Paqaobet30", time: new Date().toISOString() });
+const symbols=["cherry","lemon","bell","gem","seven"];
+const weights=[.60,.20,.11,.065,.025];
+const mult={cherry:5,lemon:8,bell:12,gem:20,seven:40};
+function randomSymbol(){
+ const r=crypto.randomInt(0,1_000_000)/1_000_000;
+ let total=0;
+ for(let i=0;i<weights.length;i++){total+=weights[i];if(r<total)return symbols[i]}
+ return "cherry";
+}
+app.get("/api/health",(req,res)=>res.json({ok:true,name:"Paqaobet30",mode:"demo"}));
+app.post("/api/spin",(req,res)=>{
+ const bet=Number(req.body?.bet);
+ if(!Number.isFinite(bet)||bet<1||bet>100)return res.status(400).json({error:"Bet must be between 1 and 100 demo credits."});
+ const center=Array.from({length:5},randomSymbol);
+ let multiplier=0;
+ if(center[0]===center[1]&&center[1]===center[2]) multiplier=Math.max(multiplier,mult[center[0]]);
+ if(center.every(x=>x===center[0])) multiplier=mult[center[0]]*3;
+ const matrix=center.map(id=>[randomSymbol(),id,randomSymbol()]);
+ res.json({matrix,mult:multiplier});
 });
-
-app.get("/api/games", (_req, res) => {
-  res.json({ games });
-});
-
-app.post("/api/register", (req, res) => {
-  const username = String(req.body.username || "").trim();
-  if (username.length < 3) return res.status(400).json({ error: "Username must be at least 3 characters." });
-
-  const token = crypto.randomBytes(24).toString("hex");
-  const user = { username, createdAt: new Date().toISOString() };
-  sessions.set(token, user);
-
-  res.json({ token, user });
-});
-
-app.post("/api/login", (req, res) => {
-  const username = String(req.body.username || "").trim();
-  if (username.length < 3) return res.status(400).json({ error: "Enter a valid username." });
-
-  const token = crypto.randomBytes(24).toString("hex");
-  const user = { username, lastLogin: new Date().toISOString() };
-  sessions.set(token, user);
-
-  res.json({ token, user });
-});
-
-app.get("/api/me", (req, res) => {
-  const token = req.headers.authorization?.replace(/^Bearer\s+/i, "");
-  const user = token ? sessions.get(token) : null;
-  if (!user) return res.status(401).json({ error: "Not authenticated." });
-  res.json({ user });
-});
-
-app.post("/api/contact", (req, res) => {
-  const name = String(req.body.name || "").trim();
-  const email = String(req.body.email || "").trim();
-  const message = String(req.body.message || "").trim();
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: "Name, email and message are required." });
-  }
-
-  console.log(`[CONTACT] ${new Date().toISOString()} ${email}: ${message}`);
-  res.json({ ok: true, message: "Message received." });
-});
-
-app.get("*", (_req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Paqaobet30 running on port ${PORT}`);
-});
+app.get("*",(req,res)=>res.sendFile(path.join(__dirname,"public","index.html")));
+app.listen(PORT,()=>console.log(`Paqaobet30 running on port ${PORT}`));
